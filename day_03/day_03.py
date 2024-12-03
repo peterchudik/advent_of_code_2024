@@ -85,7 +85,7 @@ def part2():
     input = read_input("day_03/day_03_input.txt")
     # print(input)
 
-    # parse input using regular expression
+    # parse input using instructions
     parsable_input = get_parsable_input(input)
     # print(parsable_input)
 
