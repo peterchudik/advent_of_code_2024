@@ -17,7 +17,8 @@ def read_input(file_path):
 
 
 def get_good_update(ordering_rules : set, updates : list):
-
+    """
+    """
     for update in updates:
         rules_for_update = set('|'.join([combination[0], combination[1]]) for combination in itertools.combinations(update,2))
         if ordering_rules.issuperset(rules_for_update):
@@ -25,10 +26,14 @@ def get_good_update(ordering_rules : set, updates : list):
 
 
 def check_update(ordering_rules : set, update : list):
+    """
+    """
     return ordering_rules.issuperset(set('|'.join([combination[0], combination[1]]) for combination in itertools.combinations(update,2)))
 
 
 def make_bad_update_good(ordering_rules : set, bad_update : list):
+    """
+    """
     update_len = len(bad_update)
 
     for rule in ordering_rules:
