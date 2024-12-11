@@ -12,7 +12,8 @@ def read_input(file_path):
 
 
 def find_way(input_map, line_id, column_id, from_number, output_set : set, output_list : list):
-
+    """
+    """
     if line_id < 0 or column_id < 0:
         return 0
     else:
@@ -38,7 +39,8 @@ def find_way(input_map, line_id, column_id, from_number, output_set : set, outpu
 
 
 def start_from_all_0(input_map):
-
+    """
+    """
     total_score = 0
     total_trails = 0
 
