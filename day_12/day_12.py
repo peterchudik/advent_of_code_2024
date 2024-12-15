@@ -12,24 +12,6 @@ def read_input(file_path):
    
     return farm
 
-def get_fence_count(farm, line_id, column_id):
-
-    fence_count = 0
-    # check left
-    if column_id == 0 or farm[line_id][column_id] != farm[line_id][column_id - 1]:
-        fence_count += 1
-    # check right
-    if column_id == len(farm[0]) - 1 or farm[line_id][column_id] != farm[line_id][column_id + 1]:
-        fence_count += 1
-    # check up
-    if line_id == 0 or farm[line_id][column_id] != farm[line_id - 1][column_id]:
-        fence_count += 1
-    # check down
-    if line_id == len(farm) - 1 or farm[line_id][column_id] != farm[line_id + 1][column_id]:
-        fence_count += 1
-
-    return fence_count 
-
 
 def find_garden(garden_id : str, line_id : int, column_id : int, farm_found : list, gardens : dict, farm : list):
     """
@@ -41,8 +23,8 @@ def find_garden(garden_id : str, line_id : int, column_id : int, farm_found : li
     elif farm_found[line_id][column_id] != garden_id[0]:
         return None
     else:
-        fence_count = get_fence_count(farm, line_id, column_id)
-        gardens[garden_id].append(tuple([line_id, column_id, fence_count]))
+        # fence_count = get_fence_count(farm, line_id, column_id)
+        gardens[garden_id].append(tuple([line_id, column_id]))
         farm_found[line_id][column_id] = '.'
         # move left
         find_garden(garden_id, line_id, column_id - 1, farm_found, gardens, farm)
@@ -54,6 +36,7 @@ def find_garden(garden_id : str, line_id : int, column_id : int, farm_found : li
         find_garden(garden_id, line_id + 1, column_id, farm_found, gardens, farm)
 
     return None
+
 
 def find_all_gardens(farm):
     """
@@ -74,6 +57,55 @@ def find_all_gardens(farm):
     return gardens
 
 
+def get_fence_cost(gardens):
+    """
+    """
+    fence_cost_total = 0
+    fence_cost_total_per_side = 0
+
+    for _, garden_coordinates in gardens.items():
+        fence_count = 0
+        corner_count = 0
+        for coordinate in garden_coordinates:
+
+            # get fence count
+            line_id, column_id = coordinate
+            if (line_id, column_id - 1) not in garden_coordinates:
+                fence_count += 1
+            if (line_id, column_id + 1) not in garden_coordinates:
+                fence_count += 1
+            if (line_id - 1, column_id) not in garden_coordinates:
+                fence_count += 1
+            if (line_id + 1, column_id) not in garden_coordinates:
+                fence_count += 1
+            
+            # get corner count
+            # outer corner
+            if (line_id, column_id - 1) not in garden_coordinates and (line_id - 1, column_id) not in garden_coordinates:
+                corner_count += 1
+            if (line_id - 1, column_id) not in garden_coordinates and (line_id, column_id + 1) not in garden_coordinates:
+                corner_count += 1
+            if (line_id, column_id + 1) not in garden_coordinates and (line_id + 1, column_id) not in garden_coordinates:
+                corner_count += 1
+            if (line_id + 1, column_id) not in garden_coordinates and (line_id, column_id - 1) not in garden_coordinates:
+                corner_count += 1
+
+            # inner corner
+            if (line_id, column_id - 1) in garden_coordinates and (line_id - 1, column_id) in garden_coordinates and (line_id - 1, column_id - 1) not in garden_coordinates:
+                corner_count += 1
+            if (line_id - 1, column_id) in garden_coordinates and (line_id, column_id + 1) in garden_coordinates and (line_id - 1, column_id + 1) not in garden_coordinates:
+                corner_count += 1
+            if (line_id, column_id + 1) in garden_coordinates and (line_id + 1, column_id) in garden_coordinates and (line_id + 1, column_id + 1) not in garden_coordinates:
+                corner_count += 1
+            if (line_id + 1, column_id) in garden_coordinates and (line_id, column_id - 1) in garden_coordinates and (line_id + 1, column_id - 1) not in garden_coordinates:
+                corner_count += 1
+
+        fence_cost_total += fence_count * len(garden_coordinates)
+        fence_cost_total_per_side += corner_count * len(garden_coordinates)
+
+    return fence_cost_total, fence_cost_total_per_side
+
+
 def part1(file_path):
     """
     """
@@ -81,22 +113,26 @@ def part1(file_path):
 
     gardens = find_all_gardens(farm)
 
-    total_price = 0
-    for _, garden_info in gardens.items():
-        number_of_garden_fields = len(garden_info)
-        number_of_fences = sum(i[2] for i in garden_info)
-        total_price = total_price + (number_of_garden_fields * number_of_fences)
+    fence_cost_total, _ = get_fence_cost(gardens)
 
     print("Answer part 1:")
-    print(f"Total price of fencing all gardens on the farm is {total_price}")
+    print(f"Total price of fencing all gardens on the farm is {fence_cost_total}")
 
 
 def part2(file_path):
     """
     """
-    pass
+    farm = read_input(file_path)
+
+    gardens = find_all_gardens(farm)
+
+    _, fence_cost_total_per_side = get_fence_cost(gardens)
+
+    print("Answer part 1:")
+    print(f"Total price of fencing all gardens on the farm is {fence_cost_total_per_side}")
+
 
 if __name__ == "__main__":
 
     part1("day_12/day_12_input.txt")
-    part2("day_12/day_12_input_test.txt")
+    part2("day_12/day_12_input.txt")
