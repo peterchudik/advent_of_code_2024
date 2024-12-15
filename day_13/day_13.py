@@ -38,7 +38,7 @@ def read_input(file_path, change_prize):
 def get_machine_min_game_cost(claw_machines):
     """
     """
-    possible_games_min_cost = {}
+    machine_game_min_cost = {}
 
     for machine_id, machine in enumerate(claw_machines):
 
@@ -49,24 +49,17 @@ def get_machine_min_game_cost(claw_machines):
         prize__x  = machine['Prize'][0]
         prize__y  = machine['Prize'][1]
 
-        button_a__max_x = int(prize__x / button_a__x)
-        # button_b__max_x = int(prize__x / button_b__x)
+        button_a__count = (prize__x * button_b__y - prize__y * button_b__x) / (button_b__y * button_a__x - button_b__x * button_a__y)
+        button_b__count = (prize__x * button_a__y - prize__y * button_a__x) / (button_a__y * button_b__x - button_b__y * button_a__x)
 
-        possible_games_min_cost[machine_id] = 0
+        # print(button_a__count, button_b__count)
 
-        for button_a__count in range(1, button_a__max_x + 1):
-            # for button_b__count in range(1, button_b__max_x + 1):
-            button_b_max_count = int((prize__x - (button_a__count * button_a__x)) / button_b__x)
-            for button_b__count in range(1, button_b_max_count + 1):
-                if button_a__count * button_a__x + button_b__count * button_b__x == prize__x:
-                    # check if y also fits
-                    if button_a__count * button_a__y + button_b__count * button_b__y == prize__y:
-                        # got possible game
-                            posible_game_cost = button_a__count * 3 + button_b__count * 1
-                            if possible_games_min_cost[machine_id] > posible_game_cost or possible_games_min_cost[machine_id] == 0:
-                                possible_games_min_cost[machine_id] = posible_game_cost
-    
-    return possible_games_min_cost
+        if button_a__count == int(button_a__count) and button_b__count == int(button_b__count):
+            machine_game_min_cost[machine_id] = int(button_a__count * 3 + button_b__count * 1)
+        else:
+            machine_game_min_cost[machine_id] = 0
+
+    return machine_game_min_cost
 
 
 def part1(file_path):
@@ -75,27 +68,27 @@ def part1(file_path):
     claw_machines = read_input(file_path, change_prize = False)
     # pp(claw_machines)
 
-    machine_min_game_cost = get_machine_min_game_cost(claw_machines)
-    # print(machine_min_game_cost)
+    machine_game_min_cost = get_machine_min_game_cost(claw_machines)
+    # print(machine_game_min_cost)
 
     print("Answer part 1:")
-    print(f"Total of all minimum prizes of all games in: {sum(min_cost for min_cost in machine_min_game_cost.values())}")
+    print(f"Total of all minimum prizes of all games in: {sum(min_cost for min_cost in machine_game_min_cost.values())}")
 
 
 def part2(file_path):
     """
     """
-    # claw_machines = read_input(file_path, change_prize = True)
+    claw_machines = read_input(file_path, change_prize = True)
     # pp(claw_machines)
 
-    # machine_min_game_cost = get_machine_min_game_cost(claw_machines)
-    # print(machine_min_game_cost)
+    machine_game_min_cost = get_machine_min_game_cost(claw_machines)
+    # print(machine_game_min_cost)
 
     print("Answer part 2:")
-    # print(f"Total of all minimum prizes of all games in: {sum(min_cost for min_cost in machine_min_game_cost.values())}")
+    print(f"Total of all minimum prizes of all games in: {sum(min_cost for min_cost in machine_game_min_cost.values())}")
 
 
 if __name__ == "__main__":
 
     part1("day_13/day_13_input.txt")
-    # part2("day_13/day_13_input_test.txt")
+    part2("day_13/day_13_input.txt")
