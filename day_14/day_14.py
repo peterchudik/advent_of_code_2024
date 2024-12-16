@@ -92,9 +92,9 @@ def detect_christmas_tree(robots, space):
     for i in range(1, space_x*space_y+1):
         move_robots(robots, space, i)
         q1, q2, q3, q4 = robot_count_in_quadrants(robots, space)
-        current_sc = q1 * q2 * q3 * q4
-        if min_safety_factor is None or min_safety_factor >= current_sc:
-            min_safety_factor = current_sc
+        current_sf = q1 * q2 * q3 * q4
+        if min_safety_factor is None or min_safety_factor >= current_sf:
+            min_safety_factor = current_sf
             min_safety_factor_at = i
 
     return min_safety_factor, min_safety_factor_at
