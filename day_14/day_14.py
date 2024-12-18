@@ -1,4 +1,6 @@
 from pprint import pprint as pp
+import time
+import os
 
 
 def read_input(file_path):
@@ -17,6 +19,24 @@ def read_input(file_path):
             robot_id += 1
 
     return robots
+
+
+def print_space(robots, space):
+    """
+    """
+    robot_positions = set()
+    for _, robot_item in robots.items():
+        robot_positions.add(robot_item['current_position'])
+
+    space_x, space_y = space
+    for y in range(0, space_y):
+        line = ''
+        for x in range(0, space_x):
+            if (x, y) in robot_positions:
+                line += 'X'
+            else:
+                line += '.'
+        print(line)
 
 
 def move_robots(robots : dict, space : tuple, seconds : int):
@@ -96,6 +116,10 @@ def detect_christmas_tree(robots, space):
         if min_safety_factor is None or min_safety_factor >= current_sf:
             min_safety_factor = current_sf
             min_safety_factor_at = i
+        
+        # print_space(robots, space)
+        # time.sleep(0.05)
+        # os.system('cls')
 
     return min_safety_factor, min_safety_factor_at
 
@@ -105,9 +129,11 @@ def part1(file_path):
     """
     space = (101, 103)
     number_of_seconds = 100
+    # number_of_seconds = 7916
 
     robots = read_input(file_path)
     robots = move_robots(robots, space, number_of_seconds)
+    # print_space(robots, space)
 
     q1, q2, q3, q4 = robot_count_in_quadrants(robots, space)
 

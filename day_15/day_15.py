@@ -1,7 +1,12 @@
+import time
+import os
+
+
 def read_input(file_path):
     """
     """
     warehouse = {}
+    expanded_warehouse = {}
     movements = []
 
     with open(file_path, mode='rt', encoding='utf-8') as f:
@@ -18,7 +23,7 @@ def read_input(file_path):
                 for i in line.strip('\n'):
                     movements.append(i)
 
-    return warehouse, movements, start_pos
+    return warehouse, movements, start_pos#, expanded_warehouse
 
 
 def print_warehouse(warehouse):
@@ -95,6 +100,8 @@ def part1(file_path):
         # print(f"Next move : {direction}")
         start_pos = move_robot(warehouse, start_pos, direction)
         # print_warehouse(warehouse)
+        # time.sleep(0.05)
+        # os.system('cls')
 
     # print_warehouse(warehouse)
 
